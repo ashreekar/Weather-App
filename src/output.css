@@ -32,8 +32,6 @@
     --text-2xl--line-height: calc(2 / 1.5);
     --text-3xl: 1.875rem;
     --text-3xl--line-height: calc(2.25 / 1.875);
-    --text-4xl: 2.25rem;
-    --text-4xl--line-height: calc(2.5 / 2.25);
     --font-weight-light: 300;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -825,6 +823,10 @@
       font-size: 14px;
     }
   }
+}
+body {
+  font-family: 'Lora', serif;
+  font-size: 20px;
 }
 @property --tw-translate-x {
   syntax: "*";
