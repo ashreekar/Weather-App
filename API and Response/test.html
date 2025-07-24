@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="output.css">
+</head>
+<body>
+    <h1>Weather App</h1>
+
+    <br>
+    <input type="text" placeholder="Search...." class="border" id="inp">
+    <br>
+    <br>
+
+    <div id="appender">
+        <!-- <p>city: <span></span></p>
+        <p>Date: <span></span></p>
+        <p>Temperature: <span></span></p>
+        <p>Humidity: <span></span></p>
+        <p>WindSpeed: <span></span></p>
+        <p>Description: <span></span></p> -->
+    </div>
+
+
+    <script>
+        const appender=document.querySelector("#appender");
+        let input=document.querySelector("#inp");
+
+        let data;
+
+
+        async function getWeather(city){
+            let api=`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=b874179f1b2c1ec026bff4eb0777ce2b`;
+
+            let result;
+            try{
+                let data=await fetch(api);
+                result=await data.json();
+                // console.log(result)
+            }catch(error){
+                console.log("Error")
+                
+            }
+
+            return result;
+        }
+
+        async function getCity(){
+            let city=input.value;
+
+            data=await getWeather(city);
+            console.log(data)
+
+            let cityName=data["name"];
+            let temp=data["main"]["temp"];
+             let humidity=data["main"]["humidity"];
+             let wind=data["wind"]["speed"];
+
+             appender.innerHTML=`<p>city: <span>${cityName}</span></p>
+        <p>Date: <span></span></p>
+        <p>Temperature: <span>${temp-273.15}</span></p>
+        <p>Humidity: <span>${humidity}</span></p>
+        <p>WindSpeed: <span>${wind}</span></p>
+        <p>Description: <span>${data["weather"][0]["description"]}</span></p>`
+        }
+
+        input.addEventListener('change',getCity);
+    </script>
+</body>
+</html>

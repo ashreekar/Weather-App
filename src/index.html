@@ -1,71 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
+    <title>High Temp</title>
     <link rel="stylesheet" href="output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="shortcut icon" href="../components/fevicon/fevicon-log.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Playwrite+HU:wght@100..400&display=swap" rel="stylesheet">
 </head>
-<body>
-    <h1>Weather App</h1>
 
-    <br>
-    <input type="text" placeholder="Search...." class="border" id="inp">
-    <br>
-    <br>
+<body class="bg-blue-50 overflow-x-hidden">
 
-    <div id="appender">
-        <!-- <p>city: <span></span></p>
-        <p>Date: <span></span></p>
-        <p>Temperature: <span></span></p>
-        <p>Humidity: <span></span></p>
-        <p>WindSpeed: <span></span></p>
-        <p>Description: <span></span></p> -->
-    </div>
+    <!-- header section srtats -->
+    <header class="w-auto mx-2 md:mx-16 my-2 shadow-md backdrop-blur-md sticky top-2 rounded-md z-10 addFont">
+        <!-- Header section wrapped in a div for better responsiveness -->
+        <div class="flex flex-row justify-between items-center w-[100%] font-bold mb-4">
+            <h1 class="text-blue-800 p-3 mx-4 my-2 rounded-sm order-1">Weather
+                Forecast
+            </h1>
+
+            <button
+                class="order-2 group relative inline-flex h-8 items-center justify-center overflow-hidden rounded-full  px-2 font-medium text-neutral-200 mx-4">
+                <span><a href="https://github.com/ashreek" ><img src="../components/header/github-logo .png" alt="gitHub" class="h-8 w-8"></a></span>
+                <div
+                    class="w-0 translate-x-[100%] pl-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:translate-x-0 group-hover:pl-1 group-hover:opacity-100">
+                    <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 text-black">
+                        <path
+                            d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
+                            fill="currentColor" fill-rule="evenodd" clip-rule="evenodd">
+                        </path>
+                    </svg>
+                </div>
+            </button>
+        </div>
+    </header>
+    <!-- header section ends -->
+
+<!-- Searchbar section with geolocation feature -->
+    <section class="mt-4 mx-2">
+
+        <form class="flex items-center max-w-lg mx-auto">
+
+            <div class="relative w-full">
+
+                <input type="text" id="voice-search"
+                    class="bg-blue-100 border border-blue-300 text-black text-sm rounded-lg focus:ring-blue-500  block w-full ps-5 sm:ps-10 p-2.5 font-bold placeholder:font-semibold focus:border-blue-500 focus:outline-none focus:ring-2 z-1 "
+                    placeholder="Search places, state,country ..." required />
+                <button type="button" class="absolute inset-y-0 end-0 flex items-center pe-3 hover:scale-125 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                        class="bi bi-geo-alt-fill text-blue-700" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                    </svg>
+                </button>
+            </div>
+            <button type="submit"
+                class="inline-flex items-center py-2.5 px-3 ms-2 text-sm text-white font-bold bg-blue-500 rounded-lg border border-blue-500 hover:border-blue-400 hover:bg-blue-400 focus:ring-4 focus:outline-none focus:ring-blue-400  cursor-pointer active:scale-90">
+                <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>Search
+            </button>
+        </form>
+    </section>
+    <!-- searchbar with geoloaction fetaure -->
 
 
-    <script>
-        const appender=document.querySelector("#appender");
-        let input=document.querySelector("#inp");
+<!-- City data showing in a grid -->
+ <section class="w-[100vw] items-center flex flex-col">
+    <section class="grid grid-cols-4 grid-rows-4 mt-6 mx-6 max-h-[50vh] h-[32vh] gap-[10px] sm:gap-[30px] w-[90vw] lg:w-[70vw]">
 
-        let data;
+        <div class="col-start-1 col-end-2 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center flex-col justify-center">
+            <h3 class="font-bold text-sm sm:text-2xl lg:text-2xl text-center">Kwala Lampur</h3>
+            <p class="font-medium text-[10px] sm:text-xl text-gray-500">IN</p>
+        </div>
+
+        <div class="col-start-2 col-end-3 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center flex-col justify-center">
+            <p class="font-bold text-xl sm:text-3xl">33<span class="font-semibold"> &#8451;</span></p>
+            <p class="font-medium text-[10px] sm:text-base text-gray-700 hidden sm:block">Feels like <span>35</span><span class="text-gray-500"> &#8451;</span></p>
+        </div>
+
+        <div class="col-start-1 col-end-5 row-start-3 row-end-5 flex flex-row h-[16vh] gap-[10px] sm:gap-[30px] w-[100%] justify-evenly">
+            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] hidden items-center flex-col justify-center sm:flex">
+                <h4 class="font-medium text-sm sm:text-base text-gray-700">Time</h4>
+                <p class="font-bold text-base sm:text-2xl">12:45<span> AM</span></p>
+            </div>
+
+            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center">
+                <h4 class="font-medium text-sm sm:text-base text-gray-700">Humidity</h4>
+                <p class="font-bold text-base sm:text-2xl">1234</p>
+            </div>
+
+            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center">
+                <h4 class="font-medium text-sm sm:text-base text-gray-700">WindSpeed</h4>
+                <p class="font-bold text-base sm:text-2xl">1234</p>
+            </div>
+
+            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center">
+                <h4 class="font-medium text-sm sm:text-base text-gray-700">Altitude</h4>
+                <p class="font-bold text-base sm:text-2xl">1234</p>
+            </div>
+        </div>
+
+        <div class="col-start-3 col-end-5 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center justify-evenly">
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-20 w-20">
+            <p class="font-medium text-base text-center sm:text-justify sm:text-xl text-gray-700">Overcast clouds</p>
+        </div>
+    </section>
+<!-- City data showing in a grud ends -->
 
 
-        async function getWeather(city){
-            let api=`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=b874179f1b2c1ec026bff4eb0777ce2b`;
+<section class="mt-[30px] sm:mt-[35px] flex flex-col items-center bg-blue-300 shadow-2xl rounded-md h-[auto] lg:h-[35vh] w-[90vw] lg:w-[70vw] pb-[10px]">
+    <h3 class="my-3 text-2xl font-bold">5 Day Forecast</h3>
 
-            let result;
-            try{
-                let data=await fetch(api);
-                result=await data.json();
-                // console.log(result)
-            }catch(error){
-                console.log(error);
-            }
+    <section class="flex sm:justify-evenly w-[100%] flex-wrap lg:flex-nowrap lg:overflow-hidden gap-[10px] flex-col sm:flex-row items-center">
+       <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">Wednesday</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">33<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">Overcast clouds</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>3343</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>3343</span></p>
+        </article>
+       <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">Wednesday</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">33<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">Overcast clouds</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>3343</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>3343</span></p>
+        </article>
+       <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">Wednesday</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">33<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">Overcast clouds</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>3343</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>3343</span></p>
+        </article>
+       <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">Wednesday</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">33<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">Overcast clouds</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>3343</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>3343</span></p>
+        </article>
+       <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">Wednesday</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">33<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">Overcast clouds</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>3343</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>3343</span></p>
+        </article>
+    
+    </section>
+</section>
 
-            return result;
-        }
+</section>
 
-        async function getCity(){
-            let city=input.value;
-
-            data=await getWeather(city);
-            console.log(data)
-
-            let cityName=data["name"];
-            let temp=data["main"]["temp"];
-             let humidity=data["main"]["humidity"];
-             let wind=data["wind"]["speed"];
-
-             appender.innerHTML=`<p>city: <span>${cityName}</span></p>
-        <p>Date: <span></span></p>
-        <p>Temperature: <span>${temp-273.15}</span></p>
-        <p>Humidity: <span>${humidity}</span></p>
-        <p>WindSpeed: <span>${wind}</span></p>
-        <p>Description: <span>${data["weather"][0]["description"]}</span></p>`
-        }
-
-        input.addEventListener('change',getCity);
-    </script>
+ <footer class="bg-gray-300 w-[100vw] h-[40vh] flex items-center flex-col mt-10 text-base">
+        <p class="mt-10 font-light text-black text-center sm:text-justify">This is a Weather Web Application devloped as per the requirement of Internshala Web Dev Course.</p>
+        <p class="mt-10 font-light text-black">Developed by Ashreek A R.</p>
+        <p class="mt-10 font-light text-black"><span class="text-black">&#169;</span> copyright Ashreek A R. All rights reserved.</p>
+     </footer>
 </body>
+
 </html>
