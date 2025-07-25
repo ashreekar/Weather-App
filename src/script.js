@@ -7,51 +7,123 @@ let geoLocationBtn=document.querySelector("#geoLocationBtn");
 let searchBtn=document.querySelector("#searchBtn");
 
 // In the initial statge using both seapartly to test separate API endpoints
-let cityDataSection=document.querySelector("#cityDataSection");
-let forecastShowingBlock=document.querySelector("#forecastShowingBlock");
+// let cityDataSection=document.querySelector("#cityDataSection");
+// let forecastShowingBlock=document.querySelector("#forecastShowingBlock");
 
 // Use below this to render once to reduce reflow and repaint
 let AppendWholeData=document.querySelector("#AppendWholeData");
 
-const renderCityAPIData=(data,timeNow)=>{
+//localStorage.setItem('Places','[]');
+const storeData=(place)=>{
+  let Places=[];
+  Places=JSON.parse(localStorage.getItem('Places')) || [];
+  if(Places.includes(place)){
+  return;
+}else if(Places.length == 6){
+  Places.shift();
+}
+  Places.push(place);
 
-  cityDataSection.innerHTML="";
-  cityDataSection.innerHTML=`<div class="col-start-1 col-end-2 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center flex-col justify-center">
+  localStorage.setItem('Places',JSON.stringify(Places));
+}
+
+
+const renderAllData=(data,dataForecst,timeNow)=>{
+  let todayDate=new Date();
+let today=todayDate.getDay();
+const days=["Sunday","Monday","Tuesday","Wednesday","Friday","Saturday"]
+
+AppendWholeData.innerHTML=``;
+  AppendWholeData.innerHTML=` <section class="grid grid-cols-4 grid-rows-4 mt-6 mx-6 max-h-[50vh] h-[32vh] gap-[10px] sm:gap-[30px] w-[90vw] lg:w-[70vw] transition ease-in-out delay-500 duration-1500" id="cityDataSection">
+
+<div class="col-start-1 col-end-2 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center flex-col justify-center hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
             <h3 class="font-bold text-sm sm:text-2xl lg:text-2xl text-center">${data["name"]}</h3>
             <p class="font-medium text-[10px] sm:text-xl text-gray-500">${data["sys"]["country"]}</p>
         </div>
 
-        <div class="col-start-2 col-end-3 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center flex-col justify-center">
+        <div class="col-start-2 col-end-3 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center flex-col justify-center hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
             <p class="font-bold text-xl sm:text-3xl">${Math.round(Number(data["main"]["temp"]-273.15)*100)/100}<span class="font-semibold"> &#8451;</span></p>
             <p class="font-medium text-[10px] sm:text-base text-gray-700 hidden sm:block">Feels like <span>${Math.round(Number(data["main"]["feels_like"]-273.15)*100)/100}</span><span class="text-gray-500"> &#8451;</span></p>
         </div>
 
         <div class="col-start-1 col-end-5 row-start-3 row-end-5 flex flex-row h-[16vh] gap-[10px] sm:gap-[30px] w-[100%] justify-evenly">
-            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] hidden items-center flex-col justify-center sm:flex">
+            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] hidden items-center flex-col justify-center sm:flex hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
                 <h4 class="font-medium text-sm sm:text-base text-gray-700">Time</h4>
                 <p class="font-bold text-base sm:text-2xl">${timeNow}</p>
             </div>
 
-            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center">
+            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
                 <h4 class="font-medium text-sm sm:text-base text-gray-700">Humidity</h4>
                 <p class="font-bold text-base sm:text-2xl">${data["main"]["humidity"]}<span class="text-gray-500"> %</span></p>
             </div>
 
-            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center">
+            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
                 <h4 class="font-medium text-sm sm:text-base text-gray-700">WindSpeed</h4>
                 <p class="font-bold text-base sm:text-2xl">${data["wind"]["speed"]}<span class="text-gray-500"> m/s</span></p>
             </div>
 
-            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center">
+            <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
                 <h4 class="font-medium text-sm sm:text-base text-gray-700">Altitude</h4>
                 <p class="font-bold text-base sm:text-2xl">${Math.round(44330*((1-(((data["main"]["grnd_level"])/(data["main"]["sea_level"]))**(1/5.255)))))}<span class="text-gray-500"> meter</span></p>
             </div>
         </div>
 
-        <div class="col-start-3 col-end-5 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center justify-evenly">
+        <div class="col-start-3 col-end-5 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center justify-evenly hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
             <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-20 w-20">
             <p class="font-medium text-base text-center sm:text-justify sm:text-xl text-gray-700">${data["weather"][0]["description"]}</p>
-        </div>`;
+        </div>
+    </section>
+<!-- City data showing in a grud ends -->
+
+<!-- forecast section starts -->
+<section class="mt-[30px] sm:mt-[35px] flex flex-col items-center bg-blue-300 shadow-2xl rounded-md h-[auto] lg:h-[35vh] w-[90vw] lg:w-[70vw] pb-[10px] transition ease-in-out delay-500 duration-1500">
+    <h3 class="my-3 text-2xl font-bold">5 Day Forecast</h3>
+
+    <section class="flex sm:justify-evenly w-[100%] flex-wrap lg:flex-nowrap lg:overflow-hidden gap-[10px] flex-col sm:flex-row items-center" id="forecastShowingBlock">
+      <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">${days[today]}</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][0]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][0]["weather"][0]["description"]}</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][0]["main"]["humidity"]}</span><span> %</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][0]["wind"]["speed"]}</span><span> m/s</span></p>
+        </article>
+      <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">${days[today]}</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][1]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][1]["weather"][0]["description"]}</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][1]["main"]["humidity"]}</span><span> %</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][1]["wind"]["speed"]}</span><span> m/s</span></p>
+        </article>
+       <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">${days[today]}</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][2]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][2]["weather"][0]["description"]}</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][2]["main"]["humidity"]}</span><span> %</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][2]["wind"]["speed"]}</span><span> m/s</span></p>
+        </article>
+      <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">${days[today]}</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][3]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][3]["weather"][0]["description"]}</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][3]["main"]["humidity"]}</span><span> %</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][3]["wind"]["speed"]}</span><span> m/s</span></p>
+        </article>
+       <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
+           <h4 class="text-[16px] font-bold">${days[today]}</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][4]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
+            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][4]["weather"][0]["description"]}</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][4]["main"]["humidity"]}</span><span> %</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][4]["wind"]["speed"]}</span><span> m/s</span></p>
+        </article>
+    
+    </section>
+    <!-- forecast section ends here -->
+</section>`
 }
 
 const getDataFromCityAPI=async (place)=>{
@@ -64,7 +136,6 @@ const getDataFromCityAPI=async (place)=>{
 
       // pass data to render
       return data;
-
 
       // console.log(data);
     }catch(err){
@@ -94,14 +165,56 @@ const getTimeNowInCity=(data)=>{
  return formattedTime;
 }
 
+const getDataFromForecastAPI=async (place)=>{
+  let API=`api.openweathermap.org/data/2.5/forecast?q=${place}&appid=${API_KEY}`;
+    try{
+
+      // fetch result from API
+      let result=await fetch('https://'+API);
+      let data=await result.json();
+
+      // pass data to render
+      return data;
+
+      // console.log(data);
+    }catch(err){
+      throw new Error(`Error: This is a server side error
+Failed to fetch data.`);
+    }
+}
+
+const renderSearchError=(searchPlace)=>{
+  placeSearch.value=searchPlace;
+  AppendWholeData.innerHTML=``;
+  AppendWholeData.innerHTML=`<div class="h-[70vh] flex items-center justify-center w-[100%]"><p>Oops there seems to be an error!</p>
+  <p>You have entered wrong city name</p>
+  </div>`;
+}
+
+const renderEmptySearch=()=>{
+  AppendWholeData.innerHTML=``;
+  AppendWholeData.innerHTML=`<div class="h-[70vh] flex items-center justify-center w-[100%]"><p>Please enter something before search!</p>
+  </div>`;
+}
+
 // Function to get searched city
 const getSearchData= async (event)=>{
   let searchPlace=placeSearch.value;
   placeSearch.value='';
-  let data=await getDataFromCityAPI(searchPlace);
+  let dataCity=await getDataFromCityAPI(searchPlace);
+  let dataForecst=await getDataFromForecastAPI(searchPlace);
+
+  if(dataCity.cod=='404'){
+    renderSearchError(searchPlace);
+    return;
+  }else if(dataCity.cod=="400"){
+    renderEmptySearch();
+    return;
+  }
   //console.log(data)
-  let timeNow=getTimeNowInCity(data);
-  renderCityAPIData(data,timeNow);
+  let timeNow=getTimeNowInCity(dataCity);
+  renderAllData(dataCity,dataForecst,timeNow);
+  storeData(searchPlace);
 }
 
 // function to get gps location
@@ -111,3 +224,22 @@ const getGeoData=(event)=>{
 
 searchBtn.addEventListener('click',getSearchData);
 geoLocationBtn.addEventListener('click',getGeoData);
+
+// const renderSuggestion=(suggestion)=>{
+//   let sugestionTile=document.querySelector('#valData');
+// sugestionTile.innerHTML='';
+//   for(let val of suggestion){
+//     let valDtat=document.createElement('p');
+//     valDtat.innerHTML=`<p class="hover:bg-blue-50 font-bold text-xl text-justify p-2 rounded-md">${val}</p>`;
+//     sugestionTile.appendChild(valDtat);
+//   }
+// }
+
+// const addSuggestion=()=>{
+//   let suggestion=JSON.parse(localStorage.getItem('Places'));
+//   console.log(suggestion)
+
+//   renderSuggestion(suggestion);
+// }
+
+//placeSearch.addEventListener('input',addSuggestion);
