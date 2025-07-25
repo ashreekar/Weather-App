@@ -14,6 +14,8 @@
     --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-blue-700: oklch(48.8% 0.243 264.376);
     --color-blue-800: oklch(42.4% 0.199 265.638);
+    --color-pink-50: oklch(97.1% 0.014 343.198);
+    --color-pink-100: oklch(94.8% 0.028 342.258);
     --color-gray-300: oklch(87.2% 0.01 258.338);
     --color-gray-500: oklch(55.1% 0.027 264.364);
     --color-gray-700: oklch(37.3% 0.034 259.733);
@@ -463,6 +465,30 @@
   }
   .bg-gray-300 {
     background-color: var(--color-gray-300);
+  }
+  .bg-pink-50 {
+    background-color: var(--color-pink-50);
+  }
+  .bg-pink-100 {
+    background-color: var(--color-pink-100);
+  }
+  .bg-\[url\(\'\.\.\/components\/bg\/bgImg\.png\'\)\] {
+    background-image: url('../components/bg/bgImg.png');
+  }
+  .bg-\[url\(\.\.\/components\/bg\/bg-img\.jpg\)\] {
+    background-image: url(../components/bg/bg-img.jpg);
+  }
+  .bg-\[url\(\.\.\/components\/bg\/bg-img\.png\)\] {
+    background-image: url(../components/bg/bg-img.png);
+  }
+  .bg-\[url\(\.\.\/components\/bg\/bgImg\.png\)\] {
+    background-image: url(../components/bg/bgImg.png);
+  }
+  .bg-contain {
+    background-size: contain;
+  }
+  .bg-no-repeat {
+    background-repeat: no-repeat;
   }
   .p-2 {
     padding: calc(var(--spacing) * 2);
