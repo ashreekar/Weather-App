@@ -31,6 +31,10 @@ const storeData=(place)=>{
 const renderAllData=(data,dataForecst,timeNow)=>{
   let todayDate=new Date();
 let today=todayDate.getDay();
+const ground = data["main"]["grnd_level"] ?? data.main.pressure;  // fallback to normal pressure if not available
+const sea = data["main"]["sea_level"] ?? 1013;                     // default sea-level pressure ~1013 hPa if not available
+const altitude = Math.round(44330 * (1 - (ground / sea) ** (1 / 5.255)));
+
 const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
   AppendWholeData.innerHTML=``;
@@ -64,12 +68,12 @@ const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturda
 
             <div class="bg-blue-300 shadow-2xl rounded-md w-[30%] sm:w-[25%] flex items-center flex-col justify-center hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
                 <h4 class="font-medium text-sm sm:text-base text-gray-700">Altitude</h4>
-                <p class="font-bold text-base sm:text-2xl">${Math.round(44330*((1-(((data["main"]["grnd_level"])/(data["main"]["sea_level"]))**(1/5.255)))))}<span class="text-gray-500"> meter</span></p>
+                <p class="font-bold text-base sm:text-2xl">${altitude}<span class="text-gray-500"> meter</span></p>
             </div>
         </div>
 
         <div class="col-start-3 col-end-5 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center justify-evenly hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
-            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-20 w-20">
+            <img src="https://openweathermap.org/img/wn/${data["weather"][0]["icon"]}@2x.png" alt="${data["weather"][0]["description"]} icon" class="h-20 w-20">
             <p class="font-medium text-base text-center sm:text-justify sm:text-xl text-gray-700">${data["weather"][0]["description"]}</p>
         </div>
     </section>
@@ -88,12 +92,13 @@ let forecastAppend=document.createElement('section');
 forecastAppend.className='flex sm:justify-evenly w-[100%] flex-wrap lg:flex-nowrap lg:overflow-hidden gap-[10px] flex-col sm:flex-row items-center';
 forecastShowingBlock.appendChild(forecastAppend);
 
-for(let forecastDay=0;forecastDay<=4;forecastDay++){
+for(let forecastDayIndex=0;forecastDayIndex<=4;forecastDayIndex++){
+  let forecastDay=forecastDayIndex*8;
   let daysBlock=document.createElement('article');
   daysBlock.className = "bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center";
-  daysBlock.innerHTML=` <h4 class="text-[16px] font-bold">${days[today]}</h4>
+  daysBlock.innerHTML=` <h4 class="text-[16px] font-bold">${days[(today+forecastDay+1)%7]}</h4>
            <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][forecastDay]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
-            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
+            <img src="https://openweathermap.org/img/wn/${dataForecst["list"][forecastDay]["weather"][0]["icon"]}@2x.png" alt="${dataForecst["list"][forecastDay]["weather"][0]["description"]} icon" class="h-10 w-10 rounded-full bg-blue-400">
             <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][forecastDay]["weather"][0]["description"]}</p>
             <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][forecastDay]["main"]["humidity"]}</span><span> %</span></p>
             <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][forecastDay]["wind"]["speed"]}</span><span> m/s</span></p>`
@@ -190,13 +195,72 @@ const getSearchData= async (event)=>{
   //console.log(data)
   let timeNow=getTimeNowInCity(dataCity);
   renderAllData(dataCity,dataForecst,timeNow);
-  storeData(searchPlace);
+   storeData(dataCity["name"]);
+}
+
+const getDataForecastByLatitude=async (data)=>{
+  let lat=data.latitude;
+  let lon=data.longitude;
+  let API=`api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+    try{
+      // fetch result from API
+      let result=await fetch('https://'+API);
+      let data=await result.json();
+
+      // pass data to render
+      return data;
+
+      // console.log(data);
+    }catch(err){
+      throw new Error(`Error: This is a server side error
+Failed to fetch data.`);
+    }
+}
+
+const getDataByLatitude=async (data)=>{
+  let lat=data.latitude;
+  let lon=data.longitude;
+  let API=`api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+    try{
+      // fetch result from API
+      let result=await fetch('https://'+API);
+      let data=await result.json();
+
+      // pass data to render
+      return data;
+
+      // console.log(data);
+    }catch(err){
+      throw new Error(`Error: This is a server side error
+Failed to fetch data.`);
+    }
 }
 
 // function to get gps location
-const getGeoData=(event)=>{
-  console.log("Feature of geo location will be added later");
-}
+const getGeoData=async (event)=>{
+  try {
+    // Bundled inside a promise jsut for the safety and reliability of geolocation api
+    const geoData = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+        },
+        (error) => reject(error)
+      );
+    });
+
+   let dataCity=await getDataByLatitude(geoData);
+   let dataForecast=await getDataForecastByLatitude(geoData);
+   let timeNow=getTimeNowInCity(dataCity);
+  renderAllData(dataCity,dataForecast,timeNow);
+  storeData(dataCity["name"]);
+  } catch (error) {
+    console.log("Oops", error);
+  }
+};
 
 searchBtn.addEventListener('click',getSearchData);
 geoLocationBtn.addEventListener('click',getGeoData);
