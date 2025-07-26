@@ -15,10 +15,15 @@ let AppendWholeData=document.querySelector("#AppendWholeData");
 
 //localStorage.setItem('Places','[]');
 const storeData=(place)=>{
+
+  // Splicing array in such a way that latest search will be rendered
+  // If search is same as in array not added but re ordered to latest
   let Places=[];
+  let latestPlaceIndex=Places.length;
   Places=JSON.parse(localStorage.getItem('Places')) || [];
   if(Places.includes(place)){
-  return;
+    latestPlaceIndex=Places.indexOf(place);
+    Places.splice(latestPlaceIndex,1)
 }else if(Places.length == 6){
   Places.shift();
 }
@@ -283,3 +288,18 @@ geoLocationBtn.addEventListener('click',getGeoData);
 // }
 
 //placeSearch.addEventListener('input',addSuggestion);
+const renderLatest=async ()=>{
+  let suggestion=JSON.parse(localStorage.getItem('Places'));
+
+    let searchPlace=suggestion[suggestion.length-1];
+  placeSearch.value='';
+  let dataCity=await getDataFromCityAPI(searchPlace);
+  let dataForecst=await getDataFromForecastAPI(searchPlace);
+
+  //console.log(data)
+  let timeNow=getTimeNowInCity(dataCity);
+  renderAllData(dataCity,dataForecst,timeNow);
+   storeData(dataCity["name"]);
+  
+}
+renderLatest();
