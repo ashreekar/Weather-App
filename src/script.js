@@ -31,9 +31,9 @@ const storeData=(place)=>{
 const renderAllData=(data,dataForecst,timeNow)=>{
   let todayDate=new Date();
 let today=todayDate.getDay();
-const days=["Sunday","Monday","Tuesday","Wednesday","Friday","Saturday"]
+const days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
-AppendWholeData.innerHTML=``;
+  AppendWholeData.innerHTML=``;
   AppendWholeData.innerHTML=` <section class="grid grid-cols-4 grid-rows-4 mt-6 mx-6 max-h-[50vh] h-[32vh] gap-[10px] sm:gap-[30px] w-[90vw] lg:w-[70vw] transition ease-in-out delay-500 duration-1500" id="cityDataSection">
 
 <div class="col-start-1 col-end-2 row-start-1 row-end-3 h-[16vh] bg-blue-300 shadow-2xl rounded-md flex items-center flex-col justify-center hover:scale-110 transition ease-in-out delay-200 duration-200 hover:bg-blue-200">
@@ -75,55 +75,31 @@ AppendWholeData.innerHTML=``;
     </section>
 <!-- City data showing in a grud ends -->
 
-<!-- forecast section starts -->
-<section class="mt-[30px] sm:mt-[35px] flex flex-col items-center bg-blue-300 shadow-2xl rounded-md h-[auto] lg:h-[35vh] w-[90vw] lg:w-[70vw] pb-[10px] transition ease-in-out delay-500 duration-1500">
-    <h3 class="my-3 text-2xl font-bold">5 Day Forecast</h3>
+</section>
+`
 
-    <section class="flex sm:justify-evenly w-[100%] flex-wrap lg:flex-nowrap lg:overflow-hidden gap-[10px] flex-col sm:flex-row items-center" id="forecastShowingBlock">
-      <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
-           <h4 class="text-[16px] font-bold">${days[today]}</h4>
-           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][0]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
+let forecastShowingBlock=document.createElement('section');
+forecastShowingBlock.className = "mt-[30px] sm:mt-[35px] flex flex-col items-center bg-blue-300 shadow-2xl rounded-md h-[auto] lg:h-[35vh] w-[90vw] lg:w-[70vw] pb-[10px] transition ease-in-out delay-500 duration-1500";
+
+forecastShowingBlock.setAttribute('id', 'forecastShowingBlock');
+forecastShowingBlock.innerHTML=`<h3 class="my-3 text-2xl font-bold">5 Day Forecast</h3>`;
+
+let forecastAppend=document.createElement('section');
+forecastAppend.className='flex sm:justify-evenly w-[100%] flex-wrap lg:flex-nowrap lg:overflow-hidden gap-[10px] flex-col sm:flex-row items-center';
+forecastShowingBlock.appendChild(forecastAppend);
+
+for(let forecastDay=0;forecastDay<=4;forecastDay++){
+  let daysBlock=document.createElement('article');
+  daysBlock.className = "bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center";
+  daysBlock.innerHTML=` <h4 class="text-[16px] font-bold">${days[today]}</h4>
+           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][forecastDay]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
             <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
-            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][0]["weather"][0]["description"]}</p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][0]["main"]["humidity"]}</span><span> %</span></p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][0]["wind"]["speed"]}</span><span> m/s</span></p>
-        </article>
-      <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
-           <h4 class="text-[16px] font-bold">${days[today]}</h4>
-           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][1]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
-            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
-            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][1]["weather"][0]["description"]}</p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][1]["main"]["humidity"]}</span><span> %</span></p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][1]["wind"]["speed"]}</span><span> m/s</span></p>
-        </article>
-       <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
-           <h4 class="text-[16px] font-bold">${days[today]}</h4>
-           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][2]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
-            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
-            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][2]["weather"][0]["description"]}</p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][2]["main"]["humidity"]}</span><span> %</span></p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][2]["wind"]["speed"]}</span><span> m/s</span></p>
-        </article>
-      <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
-           <h4 class="text-[16px] font-bold">${days[today]}</h4>
-           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][3]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
-            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
-            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][3]["weather"][0]["description"]}</p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][3]["main"]["humidity"]}</span><span> %</span></p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][3]["wind"]["speed"]}</span><span> m/s</span></p>
-        </article>
-       <article class=" bg-blue-50 shadow-2xl rounded-md p-2 sm:h-[24vh] lg:h-[24vh] sm:w-[25vw] lg:w-[13vw] w-[80vw] flex flex-col items-center justify-center">
-           <h4 class="text-[16px] font-bold">${days[today]}</h4>
-           <p class="text-[16px] lg:text-[14px] font-bold">${Math.round(dataForecst["list"][4]["main"]["temp"]-273.15)}<span> &#8451;</span></p>
-            <img src="https://cdn-icons-png.flaticon.com/512/7133/7133364.png" alt="" class="h-10 w-10">
-            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][4]["weather"][0]["description"]}</p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][4]["main"]["humidity"]}</span><span> %</span></p>
-            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][4]["wind"]["speed"]}</span><span> m/s</span></p>
-        </article>
-    
-    </section>
-    <!-- forecast section ends here -->
-</section>`
+            <p class="text-[14px] lg:text-[12px] font-semibold text-gray-700">${dataForecst["list"][forecastDay]["weather"][0]["description"]}</p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Humidity <span>${dataForecst["list"][forecastDay]["main"]["humidity"]}</span><span> %</span></p>
+            <p class="text-[13px] lg:text-[12px] font-medium">Windspeed <span>${dataForecst["list"][forecastDay]["wind"]["speed"]}</span><span> m/s</span></p>`
+  forecastAppend.appendChild(daysBlock);
+}
+AppendWholeData.appendChild(forecastShowingBlock);
 }
 
 const getDataFromCityAPI=async (place)=>{
