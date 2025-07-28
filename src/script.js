@@ -5,12 +5,12 @@ let formSection=document.querySelector("#formSection");
 let placeSearch=document.querySelector("#placeSearch");
 let geoLocationBtn=document.querySelector("#geoLocationBtn");
 let searchBtn=document.querySelector("#searchBtn");
+let suggestionTile = document.querySelector('#suggestions-container');
 
 // In the initial statge using both seapartly to test separate API endpoints
 // let cityDataSection=document.querySelector("#cityDataSection");
 // let forecastShowingBlock=document.querySelector("#forecastShowingBlock");
 
-// Use below this to render once to reduce reflow and repaint
 let AppendWholeData=document.querySelector("#AppendWholeData");
 
 //localStorage.setItem('Places','[]');
@@ -27,11 +27,10 @@ const storeData=(place)=>{
 }else if(Places.length == 6){
   Places.shift();
 }
-  Places.push(place);
+  Places.unshift(place);
 
   localStorage.setItem('Places',JSON.stringify(Places));
 }
-
 
 const renderAllData=(data,dataForecst,timeNow)=>{
   let todayDate=new Date();
@@ -113,11 +112,11 @@ AppendWholeData.appendChild(forecastShowingBlock);
 }
 
 const getDataFromCityAPI=async (place)=>{
-    let API=`api.openweathermap.org/data/2.5/weather?q=${place}&appid=${API_KEY}`;
+    let API=`https://api.openweathermap.org/data/2.5/weather?q=${place}&appid=${API_KEY}`;
     try{
 
       // fetch result from API
-      let result=await fetch('https://'+API);
+      let result=await fetch(API);
       let data=await result.json();
 
       // pass data to render
@@ -125,6 +124,7 @@ const getDataFromCityAPI=async (place)=>{
 
       // console.log(data);
     }catch(err){
+      renderServerError();
       throw new Error(`Error: This is a server side error
 Failed to fetch data.`);
     }
@@ -152,11 +152,11 @@ const getTimeNowInCity=(data)=>{
 }
 
 const getDataFromForecastAPI=async (place)=>{
-  let API=`api.openweathermap.org/data/2.5/forecast?q=${place}&appid=${API_KEY}`;
+  let API=`https://api.openweathermap.org/data/2.5/forecast?q=${place}&appid=${API_KEY}`;
     try{
 
       // fetch result from API
-      let result=await fetch('https://'+API);
+      let result=await fetch(API);
       let data=await result.json();
 
       // pass data to render
@@ -174,6 +174,13 @@ const renderSearchError=(searchPlace)=>{
   AppendWholeData.innerHTML=``;
   AppendWholeData.innerHTML=`<div class="h-[70vh] flex items-center justify-center w-[100%]"><p>Oops there seems to be an error!</p>
   <p>You have entered wrong city name</p>
+  </div>`;
+}
+
+const renderServerError=()=>{
+  AppendWholeData.innerHTML=``;
+  AppendWholeData.innerHTML=`<div class="h-[70vh] flex items-center justify-center w-[100%]"><p>Oops there seems to be an error!</p>
+  <p>Please check you connection as search timedout</p>
   </div>`;
 }
 
@@ -206,10 +213,10 @@ const getSearchData= async (event)=>{
 const getDataForecastByLatitude=async (data)=>{
   let lat=data.latitude;
   let lon=data.longitude;
-  let API=`api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+  let API=`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
     try{
       // fetch result from API
-      let result=await fetch('https://'+API);
+      let result=await fetch(API);
       let data=await result.json();
 
       // pass data to render
@@ -225,10 +232,10 @@ Failed to fetch data.`);
 const getDataByLatitude=async (data)=>{
   let lat=data.latitude;
   let lon=data.longitude;
-  let API=`api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+  let API=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
     try{
       // fetch result from API
-      let result=await fetch('https://'+API);
+      let result=await fetch(API);
       let data=await result.json();
 
       // pass data to render
@@ -253,7 +260,7 @@ const getGeoData=async (event)=>{
             longitude: position.coords.longitude
           });
         },
-        (error) => reject(error)
+        (error) => reject(`Geolocation is unable to fetch location data`,error)
       );
     });
 
@@ -270,26 +277,84 @@ const getGeoData=async (event)=>{
 searchBtn.addEventListener('click',getSearchData);
 geoLocationBtn.addEventListener('click',getGeoData);
 
-// const renderSuggestion=(suggestion)=>{
-//   let sugestionTile=document.querySelector('#valData');
-// sugestionTile.innerHTML='';
-//   for(let val of suggestion){
-//     let valDtat=document.createElement('p');
-//     valDtat.innerHTML=`<p class="hover:bg-blue-50 font-bold text-xl text-justify p-2 rounded-md">${val}</p>`;
-//     sugestionTile.appendChild(valDtat);
-//   }
-// }
+const getDataOfSuggestion=(e) => {
+      let val=e.target.innerText;
+      placeSearch.value = val;
+      getSearchData();
+      suggestionTile.classList.add('hidden'); 
+    }
 
-// const addSuggestion=()=>{
-//   let suggestion=JSON.parse(localStorage.getItem('Places'));
-//   console.log(suggestion)
+const renderSuggestion = (suggestions, targetVal) => {
+  suggestionTile.innerHTML = '';
 
-//   renderSuggestion(suggestion);
-// }
+  if (!suggestions || suggestions.length === 0){ 
+    suggestionTile.classList.add('hidden');
+    return;
+  }
 
-//placeSearch.addEventListener('input',addSuggestion);
+  if(targetVal.length > 0){
+     // Filter by input text (case-insensitive)
+      let filtered = targetVal.length > 0
+    ? suggestions.filter(item => item.toLowerCase().includes(targetVal.toLowerCase()))
+    : suggestions;
+
+  if (filtered.length === 0){
+    return suggestionTile.classList.add('hidden');
+  } 
+  suggestionTile.classList.remove('hidden');
+
+  filtered.forEach(val => {
+    const p = document.createElement('p');
+    p.className = "hover:bg-blue-50 font-bold text-xl text-justify p-2 rounded-md cursor-pointer w-[100%] border-grey-300 sahdow-md";
+    p.textContent = val;
+
+    // On click → fill input and search
+    p.addEventListener('click', getDataOfSuggestion);
+
+    suggestionTile.appendChild(p);
+  });
+  }
+  else if(targetVal == ''){
+    suggestionTile.classList.remove('hidden');
+    suggestions.forEach(val => {
+    const p = document.createElement('p');
+    p.className = "hover:bg-blue-50 font-bold text-xl text-justify p-2 rounded-md cursor-pointer w-[100%] border-grey-300 sahdow-md";
+    p.textContent = val;
+
+    // addending event listner
+    p.addEventListener('click', getDataOfSuggestion);
+
+    suggestionTile.appendChild(p);
+  });
+  return;
+  }
+
+};
+
+const addSuggestion=(event)=>{
+  
+  let tragetVal=event.target.value;
+  let suggestion=JSON.parse(localStorage.getItem('Places')) || [];
+  console.log(suggestion)
+
+  renderSuggestion(suggestion,tragetVal);
+}
+
+const hideSuggestion=(event)=>{
+  const suggestionTile = document.querySelector('#suggestions-container');
+if (!event.target.closest('#suggestions-container')) {
+    suggestionTile.classList.add('hidden');
+  }
+}
+
+placeSearch.addEventListener('input',addSuggestion);
+document.body.addEventListener('click',hideSuggestion);
+// placeSearch.addEventListener('focus', addSuggestion);
+
 const renderLatest=async ()=>{
-  let suggestion=JSON.parse(localStorage.getItem('Places'));
+  let suggestion=JSON.parse(localStorage.getItem('Places')) || [];
+
+  if (suggestion.length === 0) return;
 
     let searchPlace=suggestion[suggestion.length-1];
   placeSearch.value='';
