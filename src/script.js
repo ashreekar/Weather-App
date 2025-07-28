@@ -1,4 +1,4 @@
-let API_KEY=`b874179f1b2c1ec026bff4eb0777ce2b`;
+import {API_KEY} from './config.js'
 
 // Select reqired elemnts
 let formSection=document.querySelector("#formSection");
