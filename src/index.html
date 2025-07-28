@@ -22,6 +22,7 @@
             <h1 class="text-blue-800 p-3 mx-4 my-2 rounded-sm order-1">Namma Weather
             </h1>
 
+            <!-- Added github project button for easy acceas -->
             <button
                 class="order-2 group relative inline-flex h-8 items-center justify-center overflow-hidden rounded-full  px-2 font-medium text-neutral-200 mx-4">
                 <span><a href="https://github.com/ashreekar"  target="_blank"><img src="../components/header/github-logo .png" alt="gitHub" class="h-8 w-8"></a></span>
@@ -46,10 +47,11 @@
         <div class="flex items-center max-w-lg mx-auto" id="formSection">
 
             <div class="relative w-full">
-
+<!-- Input search bar for searching -->
                 <input type="text" id="placeSearch"
                     class="bg-blue-100 border border-blue-300 text-black text-sm rounded-lg focus:ring-blue-500  block w-full ps-5 sm:ps-10 p-2.5 font-bold placeholder:font-semibold focus:border-blue-500 focus:outline-none focus:ring-2 z-1 "
                     placeholder="Search places, state,country ..." required />
+                    <!-- added the location button for input -->
                 <button type="button" class="absolute inset-y-0 end-0 flex items-center pe-3 scale-125 active:scale-95 cursor-pointer" id="geoLocationBtn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                         class="bi bi-geo-alt-fill text-blue-700" viewBox="0 0 16 16">
@@ -57,6 +59,7 @@
                     </svg>
                 </button>
             </div>
+            <!-- added the submission button for input -->
             <button type="submit" id="searchBtn"
                 class="inline-flex items-center py-2.5 px-3 ms-2 text-sm text-white font-bold bg-blue-500 rounded-lg border border-blue-500 hover:border-blue-400 hover:bg-blue-400  cursor-pointer active:scale-90">
                 <svg class="w-4 h-4 me-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -67,8 +70,10 @@
             </button>
         </div>
 
-        <div id="suggestions-container" class="absolute z-10 bg-white border border-blue-700 rounded-md shadow-lg mt-1 hidden w-[40vw]">
-    <!-- Suggestions will be inserted here by JavaScript -->
+        <!-- adde suugestions box which will be updated dynamically -->
+
+        <div id="suggestions-container" class="absolute z-8 bg-white border border-blue-700 rounded-md shadow-lg mt-1 hidden w-[75vw] md:w-[25vw] left-1/2 transform -translate-x-1/2">
+    <!-- Suggestions will be inserted dynamically -->
   </div>
 
     </section>
