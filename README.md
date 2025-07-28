@@ -1,12 +1,15 @@
 Weather App
 
-#Author: Ashreek A R
+# Author: Ashreek A R
 
 This is a real time weather application using HTML,tailwind CSS and JavaScript.
 
 Technologies used: HTML, CSS, Tailwind CSS, JavaScript, OpenWeatheMap API.
 
-#Folder structure:
+# GitHub link
+
+
+# Folder structure:
 
 componets
     --bg
