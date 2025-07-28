@@ -7,7 +7,7 @@ This is a real time weather application using HTML,tailwind CSS and JavaScript.
 Technologies used: HTML, CSS, Tailwind CSS, JavaScript, OpenWeatheMap API.
 
 # GitHub link
-
+[GitHub Link](https://github.com/ashreekar/Weather-App)
 
 # Folder structure:
 
