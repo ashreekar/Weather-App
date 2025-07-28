@@ -9,6 +9,10 @@ Technologies used: HTML, CSS, Tailwind CSS, JavaScript, OpenWeatheMap API.
 # GitHub link
 [GitHub Link](https://github.com/ashreekar/Weather-App)
 
+Git repo name : Weather-App
+Author : Ashreek A R 
+Git repo link : https://github.com/ashreekar/Weather-App.git
+
 # Folder structure:
 
 componets
