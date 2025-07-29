@@ -34,6 +34,9 @@ const storeData=(place)=>{
 }
 
 const renderAllData=(data,dataForecst,timeNow)=>{
+   if(typeof data != typeof {}){
+    return;
+  }
 // calculating the altitude of the place with this using pressure and sea level pressure
 const ground = data["main"]["grnd_level"] ?? data.main.pressure;  // fallback to normal pressure if not available
 const sea = data["main"]["sea_level"] ?? 1013;                     // default sea-level pressure ~1013 hPa if not available
@@ -148,6 +151,9 @@ Failed to fetch data.`);
 
 // Function to get exact time of the city
 const getTimeNowInCity=(data)=>{
+  if(typeof data != typeof {}){
+    return;
+  }
   // fetch timezone in seconds to hours
   let timezone=Number(data["timezone"]);
   // fetch time
@@ -227,6 +233,10 @@ const getSearchData= async (event)=>{
   let dataCity=await getDataFromCityAPI(searchPlace);
   let dataForecst=await getDataFromForecastAPI(searchPlace);
 
+   if(typeof dataCity != typeof {}){
+    return;
+  }
+
   // Making sure that errors get rendered perfeclty
   if(dataCity.cod=='404'){
     renderSearchError(searchPlace);
@@ -304,6 +314,11 @@ const getGeoData=async (event)=>{
 
    let dataCity=await getDataByLatitude(geoData);
    let dataForecast=await getDataForecastByLatitude(geoData);
+
+  if(typeof dataCity != typeof {}){
+    return;
+  }
+
    let timeNow=getTimeNowInCity(dataCity);
   renderAllData(dataCity,dataForecast,timeNow);
   storeData(dataCity["name"]);
@@ -412,6 +427,9 @@ return;
   let dataCity=await getDataFromCityAPI(searchPlace);
   let dataForecst=await getDataFromForecastAPI(searchPlace);
 
+   if(typeof dataCity != typeof {}){
+    return;
+  }
   //console.log(data)
   let timeNow=getTimeNowInCity(dataCity);
   renderAllData(dataCity,dataForecst,timeNow);
