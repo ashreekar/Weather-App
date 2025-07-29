@@ -141,7 +141,7 @@ const getDataFromCityAPI=async (place)=>{
       // console.log(data);
     }catch(err){
       renderServerError();
-      throw new Error(`Error: This is a server side error
+      console.error(`Error: This is a server side error
 Failed to fetch data.`);
     }
 }
@@ -184,7 +184,7 @@ const getDataFromForecastAPI=async (place)=>{
       // console.log(data);
     }catch(err){
       // Throwing a error if some problem happends
-      throw new Error(`Error: This is a server side error
+      console.error(`Error: This is a server side error
 Failed to fetch data.`);
     }
 }
@@ -259,7 +259,7 @@ const getDataForecastByLatitude=async (data)=>{
       // console.log(data);
     }catch(err){
       renderServerError();
-      throw new Error(`Error: This is a server side error
+      console.error(`Error: This is a server side error
 Failed to fetch data.`);
     }
 }
@@ -280,7 +280,7 @@ const getDataByLatitude=async (data)=>{
       // console.log(data);
     }catch(err){
       renderServerError();
-      throw new Error(`Error: This is a server side error
+      console.error(`Error: This is a server side error
 Failed to fetch data.`);
     }
 }
@@ -308,7 +308,7 @@ const getGeoData=async (event)=>{
   renderAllData(dataCity,dataForecast,timeNow);
   storeData(dataCity["name"]);
   } catch (error) {
-    console.log("Oops", error);
+    console.error(error);
   }
 };
 
@@ -379,7 +379,7 @@ const renderSuggestion = (suggestions, targetVal) => {
 const addSuggestion=(event)=>{
   let tragetVal=event.target.value;
   let suggestion=JSON.parse(localStorage.getItem('Places')) || [];
-  console.log(suggestion)
+  // console.log(suggestion)
 
   renderSuggestion(suggestion,tragetVal);
 }
